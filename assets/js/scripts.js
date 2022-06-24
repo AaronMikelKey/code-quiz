@@ -30,17 +30,33 @@ let questions = [
 		answers: ['div', 'img', 'article', 'break'],
 		correct: 'break'
 	},{
-		question: 'Commonly used data types do NOT include which of the following: ',
-		answers: ['Number', 'Array', 'Boolean', 'String'],
-		correct: 'Array'
+		question: 'Which of these is NOT a built-in Javascript object: ',
+		answers: ['Date', 'Object', 'Null', 'Error'],
+		correct: 'Null'
 	},{
-		question: 'Commonly used data types do NOT include which of the following: ',
-		answers: ['Number', 'Array', 'Boolean', 'String'],
-		correct: 'Array'
+		question: 'Which of the following can be nested within a <table> element: ',
+		answers: ['<thead>', '<a>', '<div>', '<footer>'],
+		correct: '<thead>'
 	},{
-		question: 'String values must be enclosed in which of the following: ',
-		answers: ['Parenthesis', 'Brackets', 'Quotation Marks', 'Slashes'],
-		correct: 'Quotation Marks'
+		question: 'Which of the following is not a CSS selector: ',
+		answers: ['*', ':', '$', '#'],
+		correct: '$'
+	},{
+		question: 'Which of the following defines the main axis in flexbox?',
+		answers: ['x-axis', 'y-axis', 'center', 'column'],
+		correct: 'column'
+	},{
+		question: 'Which of the following is a CSS psuedo class?',
+		answers: [':target', ':bracket', ':user', ':pepperoni'],
+		correct: ':target'
+	},{
+		question: 'Which of the following cannot be used as a color in CSS: ',
+		answers: ['rgb(190, 66, 100)', 'superLightOrange' ,'#23bf8h', 'hsl(172, 82, 67)'],
+		correct: 'superLightOrange'
+	},{
+		question: 'Click yes',
+		answers: ['yes', 'no', 'no way', 'maybe'],
+		correct: 'yes'
 	},
 ]
 
@@ -49,16 +65,18 @@ const seeHighScores = () => {
 	highScoreEl.setAttribute('style', 'display: block')
 	homeEl.setAttribute('style', 'display: none')
 	quizEl.setAttribute('style', 'display: none')
-
-	console.log(localStorage.getItem('highScores'))
-
+	//clear the existing nodes in the ol since we sort and append them
+	while (highScoreList.firstChild) {
+		highScoreList.removeChild(highScoreList.firstChild)
+	}
 	let highScores = JSON.parse(localStorage.getItem('highScores'))
-	if (highScores != null) {
+	if (highScores != null) { // if JSON.parse returns null if the object doesn't exist
+		highScores.sort((a,b) => b.score - a.score) //sort scores highest to lowest
 		for (let i=0; i<highScores.length; i++) {
-			let scoreListItem = '<li></li>'
+			let scoreListItem = document.createElement('li')
 			let userScore = highScores[i].name + ' : ' + highScores[i].score
 			scoreListItem.textContent = userScore;
-			highScoreList.appendChild(scoreListItem)
+			highScoreList.append(scoreListItem) // append sorted items to ol
 		}
 	}
 }
@@ -89,9 +107,9 @@ const seeQuizPage = () => {
 
 // Show quiz page and start quiz
 const startQuiz = () => {
+	quizLogic();
 	localStorage.removeItem('score') // clear stored score in case user doesn't save before starting again
 	seeQuizPage();
-	quizLogic();
 }
 
 // Start quiz when clicked
@@ -104,6 +122,7 @@ const quizLogic = () => {
 	let questionCount = 0
 	//Show questions function
 	const nextQuestion = () => {
+		// questionCount is incremented after a question is answered
 		question.textContent = questions[questionCount].question;
 		answerButton1.textContent = questions[questionCount].answers[0]
 		answerButton2.textContent = questions[questionCount].answers[1]
@@ -117,9 +136,8 @@ const quizLogic = () => {
 	}, 1000);
 	nextQuestion()
 	let answerButtons = document.querySelector('#answers');
-	console.log(answerButtons)
+	// Event listener for answer buttons
 	answerButtons.addEventListener('click', function(event) {
-		console.log(event.target)
 		let selectedAnswer = event.target
 		if (selectedAnswer.textContent == questions[questionCount].correct && questionCount < questions.length - 1) {
 			score += 1;
@@ -133,7 +151,7 @@ const quizLogic = () => {
 			nextQuestion()
 		}
 		else {
-			clearInterval(countdownTimer)
+			clearInterval(countdownTimer) 
 			stopQuiz()
 		}
 	})
@@ -145,7 +163,7 @@ const saveHighScore = () => {
 	yourScore.textContent = 'Your score is ' + score
 	seeHighScores()
 	let highScores
-	localStorage.getItem(highScores) == null ? highScores = {} : highScores = JSON.parse(localStorage.getItem('highScores'))
+	localStorage.getItem('highScores') == null ? highScores = [] : highScores = JSON.parse(localStorage.getItem('highScores'))
 	console.log(highScores)
 	let user = ''
 	form.setAttribute('style', 'display: block')
@@ -154,8 +172,9 @@ const saveHighScore = () => {
 		let name = input.value
 		let score = localStorage.getItem('score')
 		user = {name : name, score : score}
-		highScores.name = user
+		highScores.push(user)
 		localStorage.setItem('highScores', JSON.stringify(highScores))
+		form.setAttribute('style', 'display: none')
 	})
 }
 
