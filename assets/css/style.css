@@ -41,6 +41,6 @@ button:hover {
 	color: #000;
 }
 
-#quiz, #high-scores {
+#quiz, #high-scores, form {
 	display: none;
 }

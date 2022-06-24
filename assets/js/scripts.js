@@ -4,6 +4,7 @@ const goBackButton = document.querySelector('#go-back') // Shown after quiz is f
 const startQuizButton = document.querySelector('#start-quiz') // button to start quiz
 const timer = document.querySelector('#timer') // number for time left
 const highScoreEl = document.querySelector('#high-scores');  // div for high scores
+const highScoreList = highScoreEl.querySelector('ol')
 const homeEl = document.querySelector('#home'); // div for home page
 const quizEl = document.querySelector('#quiz'); // div for quiz
 const question = document.querySelector('#question'); // h2 for question
@@ -12,6 +13,9 @@ const answerButton2 = document.querySelector('#answer-2')
 const answerButton3 = document.querySelector('#answer-3')
 const answerButton4 = document.querySelector('#answer-4')
 const result = document.querySelector('#result'); // display area for result of answered question
+const form = document.querySelector('form')
+const input = document.querySelector('input')
+const yourScore = document.querySelector('#your-score')
 let timeLeft = 75
 let score = 0
 
@@ -45,6 +49,18 @@ const seeHighScores = () => {
 	highScoreEl.setAttribute('style', 'display: block')
 	homeEl.setAttribute('style', 'display: none')
 	quizEl.setAttribute('style', 'display: none')
+
+	console.log(localStorage.getItem('highScores'))
+
+	let highScores = JSON.parse(localStorage.getItem('highScores'))
+	if (highScores != null) {
+		for (let i=0; i<highScores.length; i++) {
+			let scoreListItem = '<li></li>'
+			let userScore = highScores[i].name + ' : ' + highScores[i].score
+			scoreListItem.textContent = userScore;
+			highScoreList.appendChild(scoreListItem)
+		}
+	}
 }
 
 // Run seeHighScores when link is clicked
@@ -126,7 +142,21 @@ const quizLogic = () => {
 
 // Function to add high scores, save to localstorage
 const saveHighScore = () => {
-	// TODO: Set object in localstorage to username & score, save over high score in storage.
+	yourScore.textContent = 'Your score is ' + score
+	seeHighScores()
+	let highScores
+	localStorage.getItem(highScores) == null ? highScores = {} : highScores = JSON.parse(localStorage.getItem('highScores'))
+	console.log(highScores)
+	let user = ''
+	form.setAttribute('style', 'display: block')
+	form.addEventListener('submit', () => {
+		console.log(input)
+		let name = input.value
+		let score = localStorage.getItem('score')
+		user = {name : name, score : score}
+		highScores.name = user
+		localStorage.setItem('highScores', JSON.stringify(highScores))
+	})
 }
 
 // Function for finished quiz
@@ -134,5 +164,5 @@ const stopQuiz = () => {
 	score += timeLeft;
 	timeLeft = 0;
 	localStorage.setItem('score', score.toString());
-	seeHighScores();
+	saveHighScore()
 }
