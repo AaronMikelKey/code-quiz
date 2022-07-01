@@ -2,6 +2,7 @@
 const highScoreLink = document.querySelector('header a') // link to high score page
 const goBackButton = document.querySelector('#go-back') // Shown after quiz is finished
 const startQuizButton = document.querySelector('#start-quiz') // button to start quiz
+const clearHighScoreButton = document.querySelector('#clear') // button to clear scores
 const timer = document.querySelector('#timer') // number for time left
 const highScoreEl = document.querySelector('#high-scores');  // div for high scores
 const highScoreList = highScoreEl.querySelector('ol')
@@ -19,7 +20,7 @@ const yourScore = document.querySelector('#your-score')
 let timeLeft = 75
 let score = 0
 
-// Object for quiz questions
+// Array of objects for quiz questions
 let questions = [
 	{
 		question: 'Commonly used data types do NOT include which of the following: ',
@@ -184,4 +185,16 @@ const stopQuiz = () => {
 	timeLeft = 0;
 	localStorage.setItem('score', score.toString());
 	saveHighScore()
+}
+
+//Function to reset high scores
+const clearHighScores = () => {
+	localStorage.removeItem('highScores')
+	console.log('clicked')
+}
+
+// Add high score reset to button
+clearHighScoreButton.onclick = () => {
+	clearHighScores()
+	seeHighScores()
 }
