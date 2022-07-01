@@ -44,3 +44,21 @@ button:hover {
 #quiz, #high-scores, form {
 	display: none;
 }
+
+#result {
+	margin-top: 15px;
+	border-top: 1px solid black;
+	font-size: 1.8em;
+	font-style: italic;
+	color: darkgray;
+	padding-top: 15px;
+}
+
+#high-scores ol {
+	font-size: 1.5em;
+	border-top: 2px solid black;
+	border-bottom: 2px solid black;
+	width: fit-content;
+	min-width: 240px;
+	margin: auto;
+}
