@@ -132,7 +132,7 @@ const quizLogic = () => {
 	}
 	//Countdown timer
 	let countdownTimer = setInterval(() => {
-		timeLeft > 0 ? timer.textContent = timeLeft : timer.textContent = null;
+		timeLeft > 0 ? timer.textContent = timeLeft : (timer.textContent = null, stopQuiz(), clearInterval(countdownTimer));
 		timeLeft -= 1
 	}, 1000);
 	nextQuestion()
@@ -140,15 +140,24 @@ const quizLogic = () => {
 	// Event listener for answer buttons
 	answerButtons.addEventListener('click', function(event) {
 		let selectedAnswer = event.target
-		if (selectedAnswer.textContent == questions[questionCount].correct && questionCount < questions.length - 1) {
+		if (
+			selectedAnswer.textContent == questions[questionCount].correct && 
+			questionCount < questions.length - 1 && 
+			timeLeft > 0
+			) {
 			score += 1;
 			questionCount += 1;
 			result.textContent = 'Correct!'
 			nextQuestion()
 		} 
-		else if (selectedAnswer.textContent != questions[questionCount].correct && questionCount < questions.length - 1){
+		else if (
+			selectedAnswer.textContent != questions[questionCount].correct &&
+			 questionCount < questions.length - 1 && 
+			 timeLeft > 0
+			 ){
 			questionCount += 1;
 			result.textContent = 'Incorrect.'
+			timeLeft -= 2
 			nextQuestion()
 		}
 		else {
@@ -165,11 +174,10 @@ const saveHighScore = () => {
 	seeHighScores()
 	let highScores
 	localStorage.getItem('highScores') == null ? highScores = [] : highScores = JSON.parse(localStorage.getItem('highScores'))
-	console.log(highScores)
+
 	let user = ''
 	form.setAttribute('style', 'display: block')
 	form.addEventListener('submit', () => {
-		console.log(input)
 		let name = input.value
 		let score = localStorage.getItem('score')
 		user = {name : name, score : score}
@@ -190,7 +198,6 @@ const stopQuiz = () => {
 //Function to reset high scores
 const clearHighScores = () => {
 	localStorage.removeItem('highScores')
-	console.log('clicked')
 }
 
 // Add high score reset to button

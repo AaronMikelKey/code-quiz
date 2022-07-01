@@ -5,7 +5,7 @@ This is a simple app that has a small list of questions to quiz you on HTML, CSS
 ---
 ## How It Works
 
-To start, just click Start Quiz and the questions will be presented along with a timer. Answer all of the questions and then you can save your score with your name.  If you would like, you can clear the scores or start the quiz again.
+To start, just click Start Quiz and the questions will be presented along with a timer. If you answer incorrectly, time is subtracted from the timer. Answer all of the questions and then you can save your score with your name.  If you would like, you can clear the scores or start the quiz again.
 
 Your score is calculated by answering the questions correctly and how much time is left when the quiz is finished.
 
